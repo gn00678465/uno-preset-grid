@@ -20,54 +20,23 @@ exports[`preset-grid > col 1`] = `
 
 exports[`preset-grid > flex-container 1`] = `
 "/* layer: default */
-
-            .flex-container,
-            .flex-container-fluid {
-              --un-gutter-x: 12px;
-              --un-gutter-y: 0px;
-              width: 100%;
-              padding-right: var(--un-gutter-x, .75rem);
-              padding-left: var(--un-gutter-x, .75rem);
-              margin-right: auto;
-              margin-left: auto;
-            }
-
-            
-              @media (min-width: 1536px) {
-                .flex-container {
-                  max-width: 1536px;
-                }
-              }
-              
-
-              @media (min-width: 1280px) {
-                .flex-container {
-                  max-width: 1280px;
-                }
-              }
-              
-
-              @media (min-width: 1024px) {
-                .flex-container {
-                  max-width: 1024px;
-                }
-              }
-              
-
-              @media (min-width: 768px) {
-                .flex-container {
-                  max-width: 768px;
-                }
-              }
-              
-
-              @media (min-width: 640px) {
-                .flex-container {
-                  max-width: 640px;
-                }
-              }
-              
-            "
+.flex-container,
+.flex-container-fluid{--un-gutter-x:12px;--un-gutter-y:0px;width:100%;padding-right:var(--un-gutter-x, .75rem);padding-left:var(--un-gutter-x, .75rem);margin-right:auto;margin-left:auto;}
+@media (min-width: 1024px){
+.flex-container{max-width:1024px;}
+}
+@media (min-width: 1280px){
+.flex-container{max-width:1280px;}
+}
+@media (min-width: 1536px){
+.flex-container{max-width:1536px;}
+}
+@media (min-width: 640px){
+.flex-container{max-width:640px;}
+}
+@media (min-width: 768px){
+.flex-container{max-width:768px;}
+}"
 `;
 
 exports[`preset-grid > row 1`] = `
