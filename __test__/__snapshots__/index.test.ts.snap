@@ -6,20 +6,20 @@ exports[`preset-grid > custom class name 1`] = `
 .custom-container-fluid{--un-gutter-x:12px;--un-gutter-y:0px;width:100%;padding-right:var(--un-gutter-x, .75rem);padding-left:var(--un-gutter-x, .75rem);margin-right:auto;margin-left:auto;}
 
           .custom-row {
-            --un-gutter-x: 12px;
+            --un-gutter-x: 24px;
             --un-gutter-y: 0px;
             display: flex;
             flex-wrap: wrap;
-            margin-top: calc(var(--un-gutter-y, 0px) * -1);
-            margin-right: calc(var(--un-gutter-x, .75rem) / -2);
-            margin-left: calc(var(--un-gutter-x, .75rem) / -2);
+            margin-top: calc(var(--un-gutter-y) * -1);
+            margin-right: calc(var(--un-gutter-x) / -2);
+            margin-left: calc(var(--un-gutter-x) / -2);
             & > * {
               flex-shrink: 0;
               width: 100%;
               max-width: 100%;
-              padding-right: calc(var(--un-gutter-x, .75rem) / 2);
-              padding-left: calc(var(--un-gutter-x, .75rem) / 2);
-              margin-top: var(--un-gutter-y, 0px) ;
+              padding-right: calc(var(--un-gutter-x) / 2);
+              padding-left: calc(var(--un-gutter-x) / 2);
+              margin-top: var(--un-gutter-y) ;
             }
           }
           
@@ -86,24 +86,33 @@ exports[`preset-grid > generate flex-container 1`] = `
 }"
 `;
 
+exports[`preset-grid > generate gutter 1`] = `
+"/* layer: default */
+.g-12{--un-gutter-x:3rem;--un-gutter-y:3rem;}
+.gx-0{--un-gutter-x:0rem;}
+.gx-6{--un-gutter-x:1.5rem;}
+.gy-0{--un-gutter-y:0rem;}
+.gy-1{--un-gutter-y:0.25rem;}"
+`;
+
 exports[`preset-grid > generate row 1`] = `
 "/* layer: default */
 
           .row {
-            --un-gutter-x: 12px;
+            --un-gutter-x: 24px;
             --un-gutter-y: 0px;
             display: flex;
             flex-wrap: wrap;
-            margin-top: calc(var(--un-gutter-y, 0px) * -1);
-            margin-right: calc(var(--un-gutter-x, .75rem) / -2);
-            margin-left: calc(var(--un-gutter-x, .75rem) / -2);
+            margin-top: calc(var(--un-gutter-y) * -1);
+            margin-right: calc(var(--un-gutter-x) / -2);
+            margin-left: calc(var(--un-gutter-x) / -2);
             & > * {
               flex-shrink: 0;
               width: 100%;
               max-width: 100%;
-              padding-right: calc(var(--un-gutter-x, .75rem) / 2);
-              padding-left: calc(var(--un-gutter-x, .75rem) / 2);
-              margin-top: var(--un-gutter-y, 0px) ;
+              padding-right: calc(var(--un-gutter-x) / 2);
+              padding-left: calc(var(--un-gutter-x) / 2);
+              margin-top: var(--un-gutter-y) ;
             }
           }
           "
@@ -117,20 +126,20 @@ exports[`preset-grid > with other breakpoints 1`] = `
 .flex-container-fluid{--un-gutter-x:12px;--un-gutter-y:0px;width:100%;padding-right:var(--un-gutter-x, .75rem);padding-left:var(--un-gutter-x, .75rem);margin-right:auto;margin-left:auto;}
 
           .row {
-            --un-gutter-x: 12px;
+            --un-gutter-x: 24px;
             --un-gutter-y: 0px;
             display: flex;
             flex-wrap: wrap;
-            margin-top: calc(var(--un-gutter-y, 0px) * -1);
-            margin-right: calc(var(--un-gutter-x, .75rem) / -2);
-            margin-left: calc(var(--un-gutter-x, .75rem) / -2);
+            margin-top: calc(var(--un-gutter-y) * -1);
+            margin-right: calc(var(--un-gutter-x) / -2);
+            margin-left: calc(var(--un-gutter-x) / -2);
             & > * {
               flex-shrink: 0;
               width: 100%;
               max-width: 100%;
-              padding-right: calc(var(--un-gutter-x, .75rem) / 2);
-              padding-left: calc(var(--un-gutter-x, .75rem) / 2);
-              margin-top: var(--un-gutter-y, 0px) ;
+              padding-right: calc(var(--un-gutter-x) / 2);
+              padding-left: calc(var(--un-gutter-x) / 2);
+              margin-top: var(--un-gutter-y) ;
             }
           }
           

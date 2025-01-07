@@ -64,20 +64,20 @@ export function presetGrid (options: GridOptions = {}): Preset {
           const _selector = e(rawSelector)
           return `
           ${_selector} {
-            --${variablePrefix}gutter-x: ${gutter / 2}px;
+            --${variablePrefix}gutter-x: ${gutter}px;
             --${variablePrefix}gutter-y: 0px;
             display: flex;
             flex-wrap: wrap;
-            margin-top: calc(var(--${variablePrefix}gutter-y, 0px) * -1);
-            margin-right: calc(var(--${variablePrefix}gutter-x, .75rem) / -1);
-            margin-left: calc(var(--${variablePrefix}gutter-x, .75rem) / -1);
+            margin-top: calc(var(--${variablePrefix}gutter-y) * -1);
+            margin-right: calc(var(--${variablePrefix}gutter-x) / -2);
+            margin-left: calc(var(--${variablePrefix}gutter-x) / -2);
             & > * {
               flex-shrink: 0;
               width: 100%;
               max-width: 100%;
-              padding-right: calc(var(--${variablePrefix}gutter-x, .75rem) / 1);
-              padding-left: calc(var(--${variablePrefix}gutter-x, .75rem) / 1);
-              margin-top: var(--${variablePrefix}gutter-y, 0px) ;
+              padding-right: calc(var(--${variablePrefix}gutter-x) / 2);
+              padding-left: calc(var(--${variablePrefix}gutter-x) / 2);
+              margin-top: var(--${variablePrefix}gutter-y) ;
             }
           }
           `
@@ -120,6 +120,16 @@ export function presetGrid (options: GridOptions = {}): Preset {
           }
           return undefined
         }
+      ],
+      [
+        new RegExp(`^g([xy])?-(\\d+)$`),
+        ([, dim, size]) => {
+          let gutterObject: { [key: string]: string } = {}
+          if (dim !== "y") gutterObject[`--${variablePrefix}gutter-x`] = `${0.25 * parseInt(size)}rem`
+          if (dim !== "x") gutterObject[`--${variablePrefix}gutter-y`] = `${0.25 * parseInt(size)}rem`
+          return gutterObject
+        },
+        { autocomplete: ["g-<num>", "gx-<num>", "gy-<num>"] }
       ]
     ],
   }

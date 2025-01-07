@@ -23,6 +23,16 @@ describe('preset-grid', () => {
     expect(noPreflightCSS).toMatchSnapshot()
   })
 
+  it('generate gutter', async () => {
+    const uno = await createGenerator({
+      presets: [
+        presetGrid()
+      ],
+    })
+    const { css: noPreflightCSS } = await uno.generate(['gy-1', 'g-12', 'gx-6', 'gx-0', 'gy-0'])
+    expect(noPreflightCSS).toMatchSnapshot()
+  })
+
   it('generate col', async () => {
     const uno = await createGenerator({
       presets: [
