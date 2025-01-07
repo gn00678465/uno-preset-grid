@@ -1,6 +1,24 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`preset-dark-mode-theme > basic 1`] = `
+exports[`preset-grid > col 1`] = `
+"/* layer: default */
+.col{flex:1 0 0%;}
+.col-1{flex:0 0 auto;width:8.333333333333332%;}
+.col-12{flex:0 0 auto;width:100%;}
+.col-6{flex:0 0 auto;width:50%;}
+@media (min-width: 1024px){
+.col-6{flex:0 0 auto;width:50%;}
+}
+@media (min-width: 640px){
+.col-12{flex:0 0 auto;width:100%;}
+}
+@media (min-width: 768px){
+.col{flex:1 0 0%;}
+.col-1{flex:0 0 auto;width:8.333333333333332%;}
+}"
+`;
+
+exports[`preset-grid > flex-container 1`] = `
 "/* layer: default */
 
             .flex-container,
@@ -52,54 +70,25 @@ exports[`preset-dark-mode-theme > basic 1`] = `
             "
 `;
 
-exports[`preset-dark-mode-theme > media dark mode 1`] = `
+exports[`preset-grid > row 1`] = `
 "/* layer: default */
 
-            .flex-container,
-            .flex-container-fluid {
-              --un-gutter-x: 12px;
-              --un-gutter-y: 0px;
+          .row {
+            --un-gutter-x: 12px;
+            --un-gutter-y: 0px;
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: calc(var(--un-gutter-y, 0px) * -1);
+            margin-right: calc(var(--un-gutter-x, .75rem) / -2);
+            margin-left: calc(var(--un-gutter-x, .75rem) / -2);
+            & > * {
+              flex-shrink: 0;
               width: 100%;
-              padding-right: var(--un-gutter-x, .75rem);
-              padding-left: var(--un-gutter-x, .75rem);
-              margin-right: auto;
-              margin-left: auto;
+              max-width: 100%;
+              padding-right: calc(var(--un-gutter-x, .75rem) / 2);
+              padding-left: calc(var(--un-gutter-x, .75rem) / 2);
+              margin-top: var(--un-gutter-y, 0px) ;
             }
-
-            
-              @media (min-width: 1536px) {
-                .flex-container {
-                  max-width: 1536px;
-                }
-              }
-              
-
-              @media (min-width: 1280px) {
-                .flex-container {
-                  max-width: 1280px;
-                }
-              }
-              
-
-              @media (min-width: 1024px) {
-                .flex-container {
-                  max-width: 1024px;
-                }
-              }
-              
-
-              @media (min-width: 768px) {
-                .flex-container {
-                  max-width: 768px;
-                }
-              }
-              
-
-              @media (min-width: 640px) {
-                .flex-container {
-                  max-width: 640px;
-                }
-              }
-              
-            "
+          }
+          "
 `;
