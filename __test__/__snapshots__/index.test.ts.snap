@@ -7,14 +7,14 @@ exports[`preset-grid > col 1`] = `
 .col-12{flex:0 0 auto;width:100%;}
 .col-6{flex:0 0 auto;width:50%;}
 @media (min-width: 1024px){
-.col-6{flex:0 0 auto;width:50%;}
+.lg\\:col-6{flex:0 0 auto;width:50%;}
 }
 @media (min-width: 640px){
-.col-12{flex:0 0 auto;width:100%;}
+.sm\\:col-12{flex:0 0 auto;width:100%;}
 }
 @media (min-width: 768px){
-.col{flex:1 0 0%;}
-.col-1{flex:0 0 auto;width:8.333333333333332%;}
+.md\\:col{flex:1 0 0%;}
+.md\\:col-1{flex:0 0 auto;width:8.333333333333332%;}
 }"
 `;
 

@@ -21,30 +21,35 @@ export function presetGrid (options: GridOptions = {}): Preset {
     rules: [
       [
         /^flex-container$/,
-        function*(_, { generator, rawSelector }) {
-          const _selector = e(rawSelector)
+        function*(_, { generator, symbols }) {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           const _breakpointEntries = getBreakpointEntries(_breakpoints)
-            yield `
-            ${_selector},
-            ${_selector}-fluid {
-              --${variablePrefix}gutter-x: ${gutter / 2}px;
-              --${variablePrefix}gutter-y: 0px;
-              width: 100%;
-              padding-right: var(--${variablePrefix}gutter-x, .75rem);
-              padding-left: var(--${variablePrefix}gutter-x, .75rem);
-              margin-right: auto;
-              margin-left: auto;
-            }
+          yield {
+            [`--${variablePrefix}gutter-x`]: `${gutter / 2}px`,
+            [`--${variablePrefix}gutter-y`]: '0px',
+            width: '100%',
+            'padding-right': `var(--${variablePrefix}gutter-x, .75rem)`,
+            'padding-left': `var(--${variablePrefix}gutter-x, .75rem)`,
+            'margin-right': 'auto',
+            'margin-left': 'auto'
+          }
+          yield {
+            [symbols.selector]: selector => `${selector}-fluid`,
+            [`--${variablePrefix}gutter-x`]: `${gutter / 2}px`,
+            [`--${variablePrefix}gutter-y`]: '0px',
+            width: '100%',
+            'padding-right': `var(--${variablePrefix}gutter-x, .75rem)`,
+            'padding-left': `var(--${variablePrefix}gutter-x, .75rem)`,
+            'margin-right': 'auto',
+            'margin-left': 'auto'
+          }
 
-            ${_breakpointEntries.map(([, value]) => `
-              @media (min-width: ${value}px) {
-                ${_selector} {
-                  max-width: ${value}px;
-                }
-              }
-              `).join('\n')}
-            `
+          for (const [, value] of _breakpointEntries) {
+            yield {
+              [symbols.parent]: `@media (min-width: ${value}px)`,
+              'max-width': `${value}px`
+            }
+          }
         }
       ],
       [
@@ -74,7 +79,7 @@ export function presetGrid (options: GridOptions = {}): Preset {
       ],
       [
         /^(\w+)?:?col-?(\d*)$/,
-        function*([_, breakpoint, size], { symbols, generator, rawSelector }) {
+        function*([_, breakpoint, size], { symbols, generator }) {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           if (!breakpoint) {
             if (!size) {
@@ -94,7 +99,7 @@ export function presetGrid (options: GridOptions = {}): Preset {
             if (!isNaN(parseInt(size)) && parseInt(size) > 0 && parseInt(size) <= columns) {
               yield {
                 [symbols.parent]: `@media (min-width: ${_breakpoints[breakpoint]})`,
-                [symbols.selector]: () => `.${rawSelector.replace(breakpoint, '').replace(":", '')}`,
+                [symbols.selector]: selector => `${selector}`,
                 flex: '0 0 auto',
                 width: `${(parseInt(size) / columns) * 100}%`
               }
@@ -102,7 +107,7 @@ export function presetGrid (options: GridOptions = {}): Preset {
             if (!size) {
               yield {
                 [symbols.parent]: `@media (min-width: ${_breakpoints[breakpoint]})`,
-                [symbols.selector]: () => `.${rawSelector.replace(breakpoint, '').replace(":", '')}`,
+                [symbols.selector]: selector => `${selector}`,
                 flex: '1 0 0%'
               }
             }
