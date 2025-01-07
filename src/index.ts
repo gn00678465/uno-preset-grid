@@ -69,14 +69,14 @@ export function presetGrid (options: GridOptions = {}): Preset {
             display: flex;
             flex-wrap: wrap;
             margin-top: calc(var(--${variablePrefix}gutter-y, 0px) * -1);
-            margin-right: calc(var(--${variablePrefix}gutter-x, .75rem) / -2);
-            margin-left: calc(var(--${variablePrefix}gutter-x, .75rem) / -2);
+            margin-right: calc(var(--${variablePrefix}gutter-x, .75rem) / -1);
+            margin-left: calc(var(--${variablePrefix}gutter-x, .75rem) / -1);
             & > * {
               flex-shrink: 0;
               width: 100%;
               max-width: 100%;
-              padding-right: calc(var(--${variablePrefix}gutter-x, .75rem) / 2);
-              padding-left: calc(var(--${variablePrefix}gutter-x, .75rem) / 2);
+              padding-right: calc(var(--${variablePrefix}gutter-x, .75rem) / 1);
+              padding-left: calc(var(--${variablePrefix}gutter-x, .75rem) / 1);
               margin-top: var(--${variablePrefix}gutter-y, 0px) ;
             }
           }
