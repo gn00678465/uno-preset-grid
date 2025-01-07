@@ -6,8 +6,10 @@ export default defineConfig({
     dts()
   ],
   build: {
+    minify: true,
+    sourcemap: true,
     lib: {
-      entry: './src/index.ts',
+      entry: ['./src/index.ts'],
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format}.js`
     },

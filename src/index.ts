@@ -15,12 +15,18 @@ export function presetGrid (options: GridOptions = {}): Preset {
     xl: '1280px',
     '2xl': '1536px'
   }
+  const containerClassName = options?.containerClass ?? 'flex-container'
+  const rowClassName = options?.rowClass ?? 'row'
+  const colClassName = options?.colClass ?? 'col'
 
   return {
     name: 'uno-preset-grid',
+    theme: {
+      breakpoints
+    },
     rules: [
       [
-        /^flex-container$/,
+        new RegExp(`^${containerClassName}$`),
         function*(_, { generator, symbols }) {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           const _breakpointEntries = getBreakpointEntries(_breakpoints)
@@ -53,8 +59,8 @@ export function presetGrid (options: GridOptions = {}): Preset {
         }
       ],
       [
-        /^row$/,
-        (_, { rawSelector }) => {
+        new RegExp(`^${rowClassName}$`),
+        function(_, { rawSelector }) {
           const _selector = e(rawSelector)
           return `
           ${_selector} {
@@ -78,7 +84,7 @@ export function presetGrid (options: GridOptions = {}): Preset {
         }
       ],
       [
-        /^(\w+)?:?col-?(\d*)$/,
+        new RegExp(`^(\\w+)?:?${colClassName}-?(\\d*)$`),
         function*([_, breakpoint, size], { symbols, generator }) {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           if (!breakpoint) {
