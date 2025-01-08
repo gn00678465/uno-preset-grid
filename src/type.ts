@@ -26,4 +26,15 @@ export interface GridOptions {
    * @default 'col'
    * */
   colClass?: string
+  /**
+   * 1rem = n px
+   * @default 16
+   */
+  baseFontSize?: number
+  /**
+   * Length units
+   * px | rem
+   * @default 'px
+   */
+  lengthUnit?: 'px' | 'rem'
 }

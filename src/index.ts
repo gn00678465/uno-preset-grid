@@ -1,13 +1,16 @@
-import { toEscapedSelector as e } from 'unocss'
 import type { Preset } from 'unocss'
 import type { Theme } from "unocss/preset-mini"
 import type { GridOptions } from "./type"
-import { getBreakpointEntries } from './utils'
+import { getBreakpointEntries, convertLenUnit } from './utils'
 
 export function presetGrid (options: GridOptions = {}): Preset {
-  const columns = options?.columns ?? 12
-  const gutter = options?.gutter ?? 24
-  const variablePrefix = options?.variablePrefix ?? 'un-'
+  const {
+    columns = 12,
+    gutter = 24,
+    variablePrefix = 'un-',
+    baseFontSize = 16,
+    lengthUnit = 'px'
+  } = options
   const breakpoints = options?.breakpoints ?? {
     sm: '640px',
     md: '768px',
@@ -25,27 +28,28 @@ export function presetGrid (options: GridOptions = {}): Preset {
       breakpoints
     },
     rules: [
+      /** container */
       [
         new RegExp(`^${containerClassName}$`),
         function*(_, { generator, symbols }) {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           const _breakpointEntries = getBreakpointEntries(_breakpoints)
           yield {
-            [`--${variablePrefix}gutter-x`]: `${gutter / 2}px`,
-            [`--${variablePrefix}gutter-y`]: '0px',
+            [`--${variablePrefix}gutter-x`]: convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize),
+            [`--${variablePrefix}gutter-y`]: '0',
             width: '100%',
-            'padding-right': `var(--${variablePrefix}gutter-x, .75rem)`,
-            'padding-left': `var(--${variablePrefix}gutter-x, .75rem)`,
+            'padding-right': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
+            'padding-left': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
             'margin-right': 'auto',
             'margin-left': 'auto'
           }
           yield {
             [symbols.selector]: selector => `${selector}-fluid`,
-            [`--${variablePrefix}gutter-x`]: `${gutter / 2}px`,
-            [`--${variablePrefix}gutter-y`]: '0px',
+            [`--${variablePrefix}gutter-x`]: convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize),
+            [`--${variablePrefix}gutter-y`]: '0',
             width: '100%',
-            'padding-right': `var(--${variablePrefix}gutter-x, .75rem)`,
-            'padding-left': `var(--${variablePrefix}gutter-x, .75rem)`,
+            'padding-right': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
+            'padding-left': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
             'margin-right': 'auto',
             'margin-left': 'auto'
           }
@@ -58,31 +62,31 @@ export function presetGrid (options: GridOptions = {}): Preset {
           }
         }
       ],
+      /** row */
       [
         new RegExp(`^${rowClassName}$`),
-        function(_, { rawSelector }) {
-          const _selector = e(rawSelector)
-          return `
-          ${_selector} {
-            --${variablePrefix}gutter-x: ${gutter}px;
-            --${variablePrefix}gutter-y: 0px;
-            display: flex;
-            flex-wrap: wrap;
-            margin-top: calc(var(--${variablePrefix}gutter-y) * -1);
-            margin-right: calc(var(--${variablePrefix}gutter-x) / -2);
-            margin-left: calc(var(--${variablePrefix}gutter-x) / -2);
-            & > * {
-              flex-shrink: 0;
-              width: 100%;
-              max-width: 100%;
-              padding-right: calc(var(--${variablePrefix}gutter-x) / 2);
-              padding-left: calc(var(--${variablePrefix}gutter-x) / 2);
-              margin-top: var(--${variablePrefix}gutter-y) ;
-            }
+        function*(_, { symbols }) {
+          yield {
+            [`--${variablePrefix}gutter-x`]: convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize),
+            [`--${variablePrefix}gutter-y`]: '0',
+            display: 'flex',
+            'flex-wrap': 'wrap',
+            'margin-top': `calc(-1 * var(--${variablePrefix}gutter-y))`,
+            'margin-right': `calc(-.5 * var(--${variablePrefix}gutter-x))`,
+            'margin-left': `calc(-.5 * var(--${variablePrefix}gutter-x))`,
           }
-          `
+          yield {
+            [symbols.selector]: selector => `${selector} > *`,
+            'flex-shrink': 0,
+            width: '100%',
+            'max-width': '100%',
+            'padding-right': `calc(var(--${variablePrefix}gutter-x) * .5)`,
+            'padding-left': `calc(var(--${variablePrefix}gutter-x) * .5)`,
+            'margin-top': `var(--${variablePrefix}gutter-y)`
+          }
         }
       ],
+      /** col */
       [
         new RegExp(`^(\\w+)?:?${colClassName}-?(\\d*)$`),
         function*([_, breakpoint, size], { symbols, generator }) {
@@ -121,12 +125,13 @@ export function presetGrid (options: GridOptions = {}): Preset {
           return undefined
         }
       ],
+      /** gutter */
       [
         new RegExp(`^g([xy])?-(\\d+)$`),
         ([, dim, size]) => {
           let gutterObject: { [key: string]: string } = {}
-          if (dim !== "y") gutterObject[`--${variablePrefix}gutter-x`] = `${0.25 * parseInt(size)}rem`
-          if (dim !== "x") gutterObject[`--${variablePrefix}gutter-y`] = `${0.25 * parseInt(size)}rem`
+          if (dim !== "y") gutterObject[`--${variablePrefix}gutter-x`] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
+          if (dim !== "x") gutterObject[`--${variablePrefix}gutter-y`] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
           return gutterObject
         },
         { autocomplete: ["g-<num>", "gx-<num>", "gy-<num>"] }

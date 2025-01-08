@@ -54,6 +54,45 @@ describe('preset-grid', () => {
     expect(noPreflightCSS).toMatchSnapshot()
   })
 
+  it('generate gutter', async () => {
+    const uno = await createGenerator({
+      presets: [
+        presetGrid()
+      ],
+    })
+    const { css: noPreflightCSS } = await uno.generate([
+      'g-1',
+      'gx-3',
+      'gy-6'
+    ])
+    expect(noPreflightCSS).toMatchSnapshot()
+  })
+
+  it('different length unit', async () => {
+    const uno = await createGenerator({
+      presets: [
+        presetGrid({
+          lengthUnit: 'rem',
+          baseFontSize: 16
+        })
+      ],
+    })
+    const { css: noPreflightCSS } = await uno.generate([
+      'flex-container',
+      'row',
+      'col',
+      'col-1',
+      'col-12',
+      'md:col',
+      'sm:col-12',
+      'lg:col-6',
+      'g-1',
+      'gx-3',
+      'gy-6'
+    ])
+    expect(noPreflightCSS).toMatchSnapshot()
+  })
+
   it('custom class name', async () => {
     const uno = await createGenerator({
       presets: [
