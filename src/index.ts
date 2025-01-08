@@ -22,6 +22,10 @@ export function presetGrid (options: GridOptions = {}): Preset {
   const rowClassName = options?.rowClass ?? 'row'
   const colClassName = options?.colClass ?? 'col'
 
+  const gutterXVar = `--${variablePrefix}gutter-x`
+  const gutterYVar = `--${variablePrefix}gutter-y`
+  const gutterXLen = convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize)
+
   return {
     name: 'uno-preset-grid',
     theme: {
@@ -35,21 +39,21 @@ export function presetGrid (options: GridOptions = {}): Preset {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           const _breakpointEntries = getBreakpointEntries(_breakpoints)
           yield {
-            [`--${variablePrefix}gutter-x`]: convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize),
-            [`--${variablePrefix}gutter-y`]: '0',
+            [gutterXVar]: gutterXLen,
+            [gutterYVar]: '0',
             width: '100%',
-            'padding-right': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
-            'padding-left': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
+            'padding-right': `calc(var(${gutterXVar}) * 0.5)`,
+            'padding-left': `calc(var(${gutterXVar}) * 0.5)`,
             'margin-right': 'auto',
             'margin-left': 'auto'
           }
           yield {
             [symbols.selector]: selector => `${selector}-fluid`,
-            [`--${variablePrefix}gutter-x`]: convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize),
-            [`--${variablePrefix}gutter-y`]: '0',
+            [gutterXVar]: gutterXLen,
+            [gutterYVar]: '0',
             width: '100%',
-            'padding-right': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
-            'padding-left': `calc(var(--${variablePrefix}gutter-x) * 0.5)`,
+            'padding-right': `calc(var(${gutterXVar}) * 0.5)`,
+            'padding-left': `calc(var(${gutterXVar}) * 0.5)`,
             'margin-right': 'auto',
             'margin-left': 'auto'
           }
@@ -67,22 +71,22 @@ export function presetGrid (options: GridOptions = {}): Preset {
         new RegExp(`^${rowClassName}$`),
         function*(_, { symbols }) {
           yield {
-            [`--${variablePrefix}gutter-x`]: convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize),
-            [`--${variablePrefix}gutter-y`]: '0',
+            [gutterXVar]: gutterXLen,
+            [gutterYVar]: '0',
             display: 'flex',
             'flex-wrap': 'wrap',
-            'margin-top': `calc(-1 * var(--${variablePrefix}gutter-y))`,
-            'margin-right': `calc(-.5 * var(--${variablePrefix}gutter-x))`,
-            'margin-left': `calc(-.5 * var(--${variablePrefix}gutter-x))`,
+            'margin-top': `calc(-1 * var(${gutterYVar}))`,
+            'margin-right': `calc(-.5 * var(${gutterXVar}))`,
+            'margin-left': `calc(-.5 * var(${gutterXVar}))`,
           }
           yield {
             [symbols.selector]: selector => `${selector} > *`,
             'flex-shrink': 0,
             width: '100%',
             'max-width': '100%',
-            'padding-right': `calc(var(--${variablePrefix}gutter-x) * .5)`,
-            'padding-left': `calc(var(--${variablePrefix}gutter-x) * .5)`,
-            'margin-top': `var(--${variablePrefix}gutter-y)`
+            'padding-right': `calc(var(${gutterXVar}) * .5)`,
+            'padding-left': `calc(var(${gutterXVar}) * .5)`,
+            'margin-top': `var(${gutterYVar})`
           }
         }
       ],
@@ -130,8 +134,8 @@ export function presetGrid (options: GridOptions = {}): Preset {
         new RegExp(`^g([xy])?-(\\d+)$`),
         ([, dim, size]) => {
           let gutterObject: { [key: string]: string } = {}
-          if (dim !== "y") gutterObject[`--${variablePrefix}gutter-x`] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
-          if (dim !== "x") gutterObject[`--${variablePrefix}gutter-y`] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
+          if (dim !== "y") gutterObject[gutterXVar] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
+          if (dim !== "x") gutterObject[gutterYVar] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
           return gutterObject
         },
         { autocomplete: ["g-<num>", "gx-<num>", "gy-<num>"] }
