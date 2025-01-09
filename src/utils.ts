@@ -41,11 +41,10 @@ export function convertLenUnit(size: string, unit: 'px' | 'rem', baseFontSize = 
   return size
 }
 
-
 export function convertBreakpointSize(size: string | number, baseFontSize = 16) {
   if (typeof size === 'number') return size
-  if (typeof size === 'string' && pxRE.test(size)) return parseInt(size.replace('px', ''))
-  if (typeof size === 'string' && remRE.test(size)) return parseInt(size.replace('rem', '')) * baseFontSize
+  const _px = convertLenUnit(size, 'px', baseFontSize)
+  if (_px.endsWith('px')) return parseInt(_px.replace('px', ''))
   return 0
 }
 
@@ -53,5 +52,5 @@ export function getBreakpointEntries(breakpoints: Record<string, string>, baseFo
   return Object.entries(breakpoints)
   .map(([k, v]) => [k, convertBreakpointSize(v, baseFontSize)])
   .filter(([, v]) => !!v)
-  .sort(([, a], [, b]) => (b as number) - (a as number))
+  .sort(([, a], [, b]) => (b as number) - (a as number)) as([string, number])[]
 }

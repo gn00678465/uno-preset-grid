@@ -1,4 +1,4 @@
-import type { Preset } from 'unocss'
+import { type Preset } from 'unocss'
 import type { Theme } from "unocss/preset-mini"
 import type { GridOptions } from "./type"
 import { getBreakpointEntries, convertLenUnit } from './utils'
@@ -11,6 +11,8 @@ export function presetGrid (options: GridOptions = {}): Preset {
     baseFontSize = 16,
     lengthUnit = 'px'
   } = options
+  // Default breakpoints
+  const piece = options?.piece ?? 60
   const breakpoints = options?.breakpoints ?? {
     sm: '640px',
     md: '768px',
@@ -18,23 +20,17 @@ export function presetGrid (options: GridOptions = {}): Preset {
     xl: '1280px',
     '2xl': '1536px'
   }
-  const containerClassName = options?.containerClass ?? 'flex-container'
-  const rowClassName = options?.rowClass ?? 'row'
-  const colClassName = options?.colClass ?? 'col'
 
   const gutterXVar = `--${variablePrefix}gutter-x`
   const gutterYVar = `--${variablePrefix}gutter-y`
-  const gutterXLen = convertLenUnit(`${gutter}px`, lengthUnit, baseFontSize)
+  const gutterXLen = `${gutter}px`
 
   return {
     name: 'uno-preset-grid',
-    theme: {
-      breakpoints
-    },
     rules: [
       /** container */
       [
-        new RegExp(`^${containerClassName}$`),
+        new RegExp(`^flex-container$`),
         function*(_, { generator, symbols }) {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           const _breakpointEntries = getBreakpointEntries(_breakpoints)
@@ -61,14 +57,15 @@ export function presetGrid (options: GridOptions = {}): Preset {
           for (const [, value] of _breakpointEntries) {
             yield {
               [symbols.parent]: `@media (min-width: ${value}px)`,
-              'max-width': `${value}px`
+              'max-width': `calc(${value}px - ${piece}px)`
             }
           }
-        }
+        },
+        { autocomplete: ['flex-container', 'flex-container-fluid']}
       ],
       /** row */
       [
-        new RegExp(`^${rowClassName}$`),
+        new RegExp(`^row$`),
         function*(_, { symbols }) {
           yield {
             [gutterXVar]: gutterXLen,
@@ -92,7 +89,7 @@ export function presetGrid (options: GridOptions = {}): Preset {
       ],
       /** col */
       [
-        new RegExp(`^(\\w+)?:?${colClassName}-?(\\d*)$`),
+        new RegExp(`^(\\w+)?:?col-?(\\d*)$`),
         function*([_, breakpoint, size], { symbols, generator }) {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
           if (!breakpoint) {
@@ -127,19 +124,28 @@ export function presetGrid (options: GridOptions = {}): Preset {
             }
           }
           return undefined
-        }
+        },
+        { autocomplete: ['col', 'col-<num>'] }
       ],
       /** gutter */
       [
         new RegExp(`^g([xy])?-(\\d+)$`),
         ([, dim, size]) => {
           let gutterObject: { [key: string]: string } = {}
-          if (dim !== "y") gutterObject[gutterXVar] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
-          if (dim !== "x") gutterObject[gutterYVar] = convertLenUnit(`${parseInt(size) * 16}px`, lengthUnit, baseFontSize)
+          if (dim !== "y") gutterObject[gutterXVar] = `${parseInt(size) * 16}px`
+          if (dim !== "x") gutterObject[gutterYVar] = `${parseInt(size) * 16}px`
           return gutterObject
         },
         { autocomplete: ["g-<num>", "gx-<num>", "gy-<num>"] }
       ]
     ],
+    postprocess: (util) => {
+      util.entries.forEach((i) => {
+        const [property, value] = i
+        if (property.startsWith(`--${variablePrefix}`) && typeof value === 'string') {
+          i[1] = convertLenUnit(value, lengthUnit, baseFontSize)
+        }
+      })
+    }
   }
 }

@@ -24,4 +24,25 @@ describe('utils', () => {
     expect(convertLenUnit('1rem', 'px')).toBe('16px')
     expect(convertLenUnit('1em', 'px')).toBe('1em')
   })
+
+  it('getBreakpointEntries', () => {
+    expect(getBreakpointEntries).toBeDefined()
+    const breakpoint = {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px'
+    }
+    expect(getBreakpointEntries(breakpoint)).toEqual([['2xl', 1536], ['xl', 1280], ['lg', 1024], ['md', 768], ['sm', 640]])
+
+    const randomBreakpoint = {
+      sm: '540px',
+      md: '720px',
+      lg: '960px',
+      xl: '1140px',
+      xxl: '1320px'
+    }
+    expect(getBreakpointEntries(randomBreakpoint)).toEqual([['xxl', 1320], ['xl', 1140], ['lg', 960], ['md', 720], ['sm', 540]])
+  })
 })

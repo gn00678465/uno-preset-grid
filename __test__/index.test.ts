@@ -1,4 +1,4 @@
-import { createGenerator, presetUno } from 'unocss'
+import { createGenerator } from 'unocss'
 import { describe, expect, it } from 'vitest'
 import { presetGrid } from '../src/index'
 
@@ -9,7 +9,27 @@ describe('preset-grid', () => {
         presetGrid()
       ],
     })
-    const { css: noPreflightCSS } = await uno.generate('flex-container')
+    const { css: containerCss } = await uno.generate([
+      'flex-container',
+      'flex-container-fluid',
+      'lg:flex-container'
+    ])
+    expect(containerCss).toMatchSnapshot()
+  })
+
+  it('different container piece', async () => {
+    const uno = await createGenerator({
+      presets: [
+        presetGrid({
+          piece: 32
+        })
+      ],
+    })
+    const { css: noPreflightCSS } = await uno.generate([
+      'flex-container',
+      'flex-container-fluid',
+      'lg:flex-container'
+    ])
     expect(noPreflightCSS).toMatchSnapshot()
   })
 
@@ -79,6 +99,7 @@ describe('preset-grid', () => {
     })
     const { css: noPreflightCSS } = await uno.generate([
       'flex-container',
+      'flex-container-fluid',
       'row',
       'col',
       'col-1',
@@ -93,49 +114,36 @@ describe('preset-grid', () => {
     expect(noPreflightCSS).toMatchSnapshot()
   })
 
-  it('custom class name', async () => {
+  it('different prefix', async () => {
     const uno = await createGenerator({
       presets: [
         presetGrid({
-          containerClass: 'custom-container',
-          rowClass: 'custom-row',
-          colClass: 'custom-col'
+          lengthUnit: 'rem',
+          baseFontSize: 16,
+          variablePrefix: 'test-'
         })
       ],
     })
     const { css: noPreflightCSS } = await uno.generate([
       'flex-container',
-      'custom-container',
+      'flex-container-fluid',
       'row',
-      'custom-row',
       'col',
-      'sm:col-2',
-      'custom-col',
-      'custom-col-1',
-      'custom-col-12',
-      'sm:custom-col-2',
-      'md:custom-col-3',
-      'lg:custom-col-4',
-      'xl:custom-col-5'
+      'col-1',
+      'col-12',
+      'md:col',
+      'sm:col-12',
+      'lg:col-6',
+      'g-1',
+      'gx-3',
+      'gy-6'
     ])
-
     expect(noPreflightCSS).toMatchSnapshot()
   })
 
   it('with other breakpoints', async () => {
     const uno = await createGenerator({
       presets: [
-        presetUno({
-          theme: {
-            breakpoints: {
-              sm: '576px',
-              md: '768px',
-              lg: '992px',
-              xl: '1200px',
-              xxl: '1400px'
-            }
-          }
-        }),
         presetGrid({
           breakpoints: {
             sm: '576px',
