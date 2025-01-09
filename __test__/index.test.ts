@@ -17,22 +17,6 @@ describe('preset-grid', () => {
     expect(containerCss).toMatchSnapshot()
   })
 
-  it('different container piece', async () => {
-    const uno = await createGenerator({
-      presets: [
-        presetGrid({
-          piece: 32
-        })
-      ],
-    })
-    const { css: noPreflightCSS } = await uno.generate([
-      'flex-container',
-      'flex-container-fluid',
-      'lg:flex-container'
-    ])
-    expect(noPreflightCSS).toMatchSnapshot()
-  })
-
   it('generate row', async () => {
     const uno = await createGenerator({
       presets: [
@@ -139,6 +123,37 @@ describe('preset-grid', () => {
       'gy-6'
     ])
     expect(noPreflightCSS).toMatchSnapshot()
+  })
+
+  it('bootstrap container config', async () => {
+    const uno = await createGenerator({
+      presets: [
+        presetGrid({
+          lengthUnit: 'rem',
+          baseFontSize: 16,
+          variablePrefix: 'bs-',
+          breakpoints: {
+            sm: '576px',
+            md: '768px',
+            lg: '992px',
+            xl: '1200px',
+            xxl: '1400px'
+          },
+          maxWidth: {
+            sm: '540px',
+            md: '720px',
+            lg: '960px',
+            xl: '1140px',
+            xxl: '1320px'
+          }
+        })
+      ],
+    })
+    const { css: bsContainer } = await uno.generate([
+      'flex-container',
+      'flex-container-fluid'
+    ])
+    expect(bsContainer).toMatchSnapshot()
   })
 
   it('with other breakpoints', async () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getBreakpointEntries, convertLenUnit, convertRemToPx, convertPxToRem } from '../src/utils'
+import { mobileFirstBreakpointSort, convertLenUnit, convertRemToPx, convertPxToRem } from '../src/utils'
 
 describe('utils', () => {
   it('convertRemToPx', () => {
@@ -25,8 +25,8 @@ describe('utils', () => {
     expect(convertLenUnit('1em', 'px')).toBe('1em')
   })
 
-  it('getBreakpointEntries', () => {
-    expect(getBreakpointEntries).toBeDefined()
+  it('mobileFirstBreakpointSort', () => {
+    expect(mobileFirstBreakpointSort).toBeDefined()
     const breakpoint = {
       sm: '640px',
       md: '768px',
@@ -34,7 +34,13 @@ describe('utils', () => {
       xl: '1280px',
       '2xl': '1536px'
     }
-    expect(getBreakpointEntries(breakpoint)).toEqual([['2xl', 1536], ['xl', 1280], ['lg', 1024], ['md', 768], ['sm', 640]])
+    expect(mobileFirstBreakpointSort(breakpoint)).toEqual([
+      ['sm', 640],
+      ['md', 768],
+      ['lg', 1024],
+      ['xl', 1280],
+      ['2xl', 1536],
+    ])
 
     const randomBreakpoint = {
       sm: '540px',
@@ -43,6 +49,12 @@ describe('utils', () => {
       xl: '1140px',
       xxl: '1320px'
     }
-    expect(getBreakpointEntries(randomBreakpoint)).toEqual([['xxl', 1320], ['xl', 1140], ['lg', 960], ['md', 720], ['sm', 540]])
+    expect(mobileFirstBreakpointSort(randomBreakpoint)).toEqual([
+      ['sm', 540],
+      ['md', 720],
+      ['lg', 960],
+      ['xl', 1140],
+      ['xxl', 1320],
+    ])
   })
 })

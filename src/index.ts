@@ -1,7 +1,7 @@
-import { type Preset } from 'unocss'
+import { toEscapedSelector as e, type Preset } from 'unocss'
 import type { Theme } from "unocss/preset-mini"
 import type { GridOptions } from "./type"
-import { getBreakpointEntries, convertLenUnit } from './utils'
+import { mobileFirstBreakpointSort, convertLenUnit } from './utils'
 
 export function presetGrid (options: GridOptions = {}): Preset {
   const {
@@ -12,7 +12,13 @@ export function presetGrid (options: GridOptions = {}): Preset {
     lengthUnit = 'px'
   } = options
   // Default breakpoints
-  const piece = options?.piece ?? 60
+  const maxWidth = options?.maxWidth ?? {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
+    '2xl': '1536px'
+  }
   const breakpoints = options?.breakpoints ?? {
     sm: '640px',
     md: '768px',
@@ -31,37 +37,39 @@ export function presetGrid (options: GridOptions = {}): Preset {
       /** container */
       [
         new RegExp(`^flex-container$`),
-        function*(_, { generator, symbols }) {
+        ([], { generator, rawSelector }) => {
           const _breakpoints = (generator?.userConfig?.theme as Theme)?.breakpoints ?? breakpoints
-          const _breakpointEntries = getBreakpointEntries(_breakpoints)
-          yield {
-            [gutterXVar]: gutterXLen,
-            [gutterYVar]: '0',
-            width: '100%',
-            'padding-right': `calc(var(${gutterXVar}) * 0.5)`,
-            'padding-left': `calc(var(${gutterXVar}) * 0.5)`,
-            'margin-right': 'auto',
-            'margin-left': 'auto'
-          }
-          yield {
-            [symbols.selector]: selector => `${selector}-fluid`,
-            [gutterXVar]: gutterXLen,
-            [gutterYVar]: '0',
-            width: '100%',
-            'padding-right': `calc(var(${gutterXVar}) * 0.5)`,
-            'padding-left': `calc(var(${gutterXVar}) * 0.5)`,
-            'margin-right': 'auto',
-            'margin-left': 'auto'
-          }
+          const _breakpointEntries = mobileFirstBreakpointSort(_breakpoints)
+          const _selector = e(rawSelector)
 
-          for (const [, value] of _breakpointEntries) {
-            yield {
-              [symbols.parent]: `@media (min-width: ${value}px)`,
-              'max-width': `calc(${value}px - ${piece}px)`
-            }
+          let containerStyle = `
+          ${_selector},
+          ${_selector}-fluid {
+            ${gutterXVar}: ${convertLenUnit(gutterXLen, lengthUnit, baseFontSize)};
+            ${gutterYVar}: 0;
+            width: 100%;
+            padding-right: calc(var(${gutterXVar}) * 0.5);
+            padding-left: calc(var(${gutterXVar}) * 0.5);
+            margin-right: auto;
+            margin-left: auto;
           }
+          `
+          _breakpointEntries.forEach(([breakpoint, value]) => {
+            const width = maxWidth[breakpoint] || `${value}px`
+            containerStyle += `
+            @media (min-width: ${value}px) {
+              ${_selector} {
+                max-width: ${width};
+              }
+            }
+            `
+          })
+
+          
+
+          return containerStyle
         },
-        { autocomplete: ['flex-container', 'flex-container-fluid']}
+        { autocomplete: ['flex-container', 'flex-container-fluid'] }
       ],
       /** row */
       [

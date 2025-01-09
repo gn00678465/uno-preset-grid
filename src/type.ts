@@ -1,8 +1,15 @@
-export interface GridOptions {
+export interface GridOptions<Breakpoint extends string = string> {
+  /**
+   * @default 12
+   */
   columns?: number
-  breakpoints?: Record<string, string>
+  breakpoints?: Record<Breakpoint, string>
+  maxWidth?: Record<Breakpoint, string>
+  /**
+   * @default 24
+   * px
+   */
   gutter?: number
-  piece?: number
   /**
    * Prefix for CSS variables.
    *

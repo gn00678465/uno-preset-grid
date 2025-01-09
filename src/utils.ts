@@ -48,9 +48,16 @@ export function convertBreakpointSize(size: string | number, baseFontSize = 16) 
   return 0
 }
 
-export function getBreakpointEntries(breakpoints: Record<string, string>, baseFontSize = 16) {
+/**
+ * 排序 mobile first breakpoints
+ * 小 -> 大
+ * @param breakpoints 
+ * @param baseFontSize 
+ * @returns 
+ */
+export function mobileFirstBreakpointSort(breakpoints: Record<string, string>, baseFontSize = 16) {
   return Object.entries(breakpoints)
   .map(([k, v]) => [k, convertBreakpointSize(v, baseFontSize)])
   .filter(([, v]) => !!v)
-  .sort(([, a], [, b]) => (b as number) - (a as number)) as([string, number])[]
+  .sort(([, a], [, b]) => (a as number) - (b as number)) as([string, number])[]
 }
